@@ -1,0 +1,23 @@
+{
+  "name": "passportindex",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Frontendab/passportindex#readme",
+  "bugs": {
+    "url": "https://github.com/Frontendab/passportindex/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Frontendab/passportindex.git"
+  },
+  "license": "MIT",
+  "author": "Ayoub Sadouri",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node app.js"
+  },
+  "dependencies": {
+    "puppeteer": "^24.40.0"
+  }
+}
