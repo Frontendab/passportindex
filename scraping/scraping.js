@@ -26,6 +26,8 @@ const save_content = asyncHandler(async(passport) => {
 
 
 async function start_scraping () {
+    const count_passports = await Passport.countDocuments({});
+    
     let obj = {}
     let passports_info = []
 
@@ -52,11 +54,9 @@ async function start_scraping () {
     await page.goto("https://www.passportindex.org", { waitUntil: "networkidle0" });
 
     const total = await page.$$eval("div.passimg", els => els.length);
-    const count_passports = await Passport.countDocuments({});
     if (count_passports >= total) return;
     const diff = total - count_passports;
     const start = total - diff;
-
     for (let i = start; i < total; i++) {
         await page.goto("https://www.passportindex.org", { waitUntil: "networkidle0" });
 
