@@ -70,7 +70,7 @@ const get_map_data = asyncHandler(async(req, res) => {
     let color_map = {}
 
     passport.visa_requirements.forEach((item, _) => {
-        const name = item.icon.split("flag-icon-")[1].toUpperCase()
+        const name = item.icon.split("flag-icon-")[1].toUpperCase();
         color_map[name] = item.color;
     });
 

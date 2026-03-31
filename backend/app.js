@@ -7,6 +7,7 @@ const connect_mongodb = require("./config/db");
 const passport_router = require("./routes/passports.route");
 const bodyParser = require("body-parser");
 const globalError = require("./middlewares/global_errors");
+const cors = require("cors");
 
 // ? Connect mongodb
 connect_mongodb();
@@ -18,6 +19,10 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors({
+  origin: "*"
+}));
 
 app.use("/", passport_router);
 
