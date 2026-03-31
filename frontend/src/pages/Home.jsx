@@ -4,7 +4,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { FaArrowRightLong } from "react-icons/fa6";
 
 
-const SITE_KEY = "6LcjQqAsAAAAAKVXEPRiejaskPArVnz3ds6gD7n7"
+const SITE_KEY = "6LdHS6AsAAAAANBvPehpO7ujN4GtRJjc-VFiaDXZ"
 
 
 const Home = () => {
