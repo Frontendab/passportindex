@@ -9,6 +9,8 @@ const VerifyRecaptcha = asyncHandler(async(req, res, next) => {
             message: "Please complete the CAPTCHA.",
         });
 
+    const { captcha } = req.body;
+
     const secretKey = process.env.SECRET_KEY_RECAPTCHA;
 
     try {
