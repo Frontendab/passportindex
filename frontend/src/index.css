@@ -4,3 +4,7 @@ body{
     overflow-x: hidden;
     scroll-behavior: smooth;
 }
+
+.captcha-container > div{
+    height: fit-content !important;
+}

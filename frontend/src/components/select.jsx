@@ -3,8 +3,6 @@ import axios from "axios";
 import { API_URL } from "../global/variables"
 import { useEffect } from 'react';
 
-// TODO I have to fetch data from /nationalities as
-
 let data = []
 
 const filterColors = (inputValue) => {
@@ -50,7 +48,7 @@ const customStyles = {
     })
 };
 
-const Select = ({ input_id }) => {
+const Select = ({ input_id, onchangeSelect }) => {
 
     const fetchData = async() => {
         try {
@@ -73,7 +71,13 @@ const Select = ({ input_id }) => {
     }, []);
 
     return (
-        <AsyncSelect styles={customStyles} cacheOptions loadOptions={loadOptions} defaultOptions inputId={input_id}/>
+        <AsyncSelect
+            styles={customStyles}
+            cacheOptions
+            loadOptions={loadOptions}
+            defaultOptions inputId={input_id}
+            onChange={onchangeSelect}
+            />
     )
 }
 
