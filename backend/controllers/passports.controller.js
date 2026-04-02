@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const Passport = require("../models/passports.model");
 const { mongoose } = require("mongoose");
+const countries = require("../countries.json");
+
 
 const get_nationalities = asyncHandler(async(req, res) => {
     const nationalities = await Passport.find({}, "name_passport");
@@ -8,22 +10,6 @@ const get_nationalities = asyncHandler(async(req, res) => {
         status: "success",
         length: nationalities.length,
         data: nationalities
-    })
-});
-
-const get_passports = asyncHandler(async(req, res) => {
-    const passports = await Passport.find({});
-
-    if (!passports)
-        return res.status(404).json({
-            status: "error",
-            message: "Doesn't found any passport"
-        });
-
-    res.status(200).json({
-        status: "success",
-        length: passports.length,
-        data: passports
     })
 });
 
@@ -44,10 +30,31 @@ const get_passport_by_id = asyncHandler(async(req, res) => {
             message: "Passport not found!"
         });
 
+    const visa_requirements = await Promise.all(
+        passport.visa_requirements.map(async (item) => {
+            const iso2 = item.icon.split("flag-icon-")[1].toUpperCase();
+
+            const passport_by_name = await Passport.findOne({
+                name_passport: item.name.toUpperCase()
+            });
+
+            return {
+                _id: passport_by_name?._id,
+                icon: iso2,
+                name: item.name,
+                visa_type: item.visa_type,
+                color: item.color
+            };
+        })
+    );
+
+    passport["visa_requirements"] = visa_requirements;
+
     res.status(200).json({
         status: "success",
-        data: passport
-    })
+        data: passport,
+    });
+
 });
 
 const get_map_data = asyncHandler(async(req, res) => {
@@ -76,13 +83,13 @@ const get_map_data = asyncHandler(async(req, res) => {
 
     res.status(200).json({
         status: "success",
-        data: color_map
+        data: color_map,
+        countries
     });
 });
 
 module.exports = {
     get_nationalities,
-    get_passports,
     get_passport_by_id,
     get_map_data,
 };

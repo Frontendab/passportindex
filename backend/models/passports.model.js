@@ -3,6 +3,10 @@ const { Schema } = mongoose;
 
 const visa_requirements = new Schema(
     {
+        _id: {
+            type: String,
+            require: true,
+        },
         icon: {
             type: String,
             required: true,
@@ -19,7 +23,7 @@ const visa_requirements = new Schema(
             type: String,
             required: true,
         },
-    }, { _id: false }
+    }
 )
 
 const passport_schema = new Schema(
