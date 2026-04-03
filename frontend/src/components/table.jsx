@@ -63,7 +63,7 @@ export default function CountiesTable({data}) {
                     className="hover:bg-gray-100 cursor-pointer"
                     onClick={() => {
                         dispatch(
-                            saveIdCountry(row._id)
+                            saveIdCountry(row.id)
                         )
                     }}
                 >

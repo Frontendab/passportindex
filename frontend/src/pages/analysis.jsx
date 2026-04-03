@@ -30,7 +30,7 @@ const Analysis = () => {
                 )
                 dispatch(
                     saveIdCountry(
-                        response.data?.data._id
+                        response.data?.data.id
                     )
                 )
                 setLoading(true);

@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     map: [],
-    // id: "",
     id: localStorage.getItem("id") ? localStorage.getItem("id") : "",
     countries: "",
     passport: []

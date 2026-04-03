@@ -16,7 +16,7 @@ const Home = () => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({ select: {
-        _id: "",
+        id: "",
         label: "",
     }, captcha: '' });
     
@@ -27,13 +27,13 @@ const Home = () => {
     const onchangeSelect = (value) => {
         setFormData({ ...formData, select: value });
         dispatch(
-            saveIdCountry(value._id)
+            saveIdCountry(value.id)
         );
     };
 
     const submit_form = async(e) => {
         e.preventDefault();
-        if (!formData.select._id) {
+        if (!formData.select.id) {
             toast.error("Please select your nationality.")
             return;
         }else if (!formData.captcha) {
@@ -45,7 +45,7 @@ const Home = () => {
         };
         try {
             const response = await axios.post(
-                `${API_URL}/nationalities/${formData.select._id}`, options
+                `${API_URL}/nationalities/${formData.select.id}`, options
             );
             if (response.status == 200){
                     await navigate("/analysis");

@@ -57,7 +57,7 @@ const Select = ({ input_id, onchangeSelect }) => {
             );
             const res = response.data?.data;
             const result = res.map(item => ({
-                _id: item._id,
+                id: item.id,
                 label: item.name_passport
             }));
             data = result;
