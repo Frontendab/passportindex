@@ -1,11 +1,10 @@
-const mongoose = require("mongoose");
-const asyncHandler = require("express-async-handler")
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client.ts";
 
-const connect_mongodb = asyncHandler(async() => {
-    mongoose.connect(
-        process.env.DB_URL,
-    );
-    console.log("mongodb is connected...");
-});
+const connectionString = `${process.env.DATABASE_URL}`;
 
-module.exports = connect_mongodb
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
+
+export { prisma };

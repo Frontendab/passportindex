@@ -1,5 +1,5 @@
-const asyncHandler = require("express-async-handler");
-const axios = require("axios");
+import asyncHandler from "express-async-handler";
+import axios from "axios";
 
 
 const VerifyRecaptcha = asyncHandler(async(req, res, next) => {
@@ -32,4 +32,6 @@ const VerifyRecaptcha = asyncHandler(async(req, res, next) => {
     }
 });
 
-module.exports = VerifyRecaptcha;
+export {
+    VerifyRecaptcha
+};

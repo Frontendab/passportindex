@@ -1,16 +1,14 @@
 // ? Config env
-require('dotenv').config()
+import { config } from 'dotenv';
 
-const { start_scraping } = require("./scraping/scraping");
-const express = require("express");
-const connect_mongodb = require("./config/db");
-const passport_router = require("./routes/passports.route");
-const bodyParser = require("body-parser");
-const globalError = require("./middlewares/global_errors");
-const cors = require("cors");
+import { start_scraping } from "./scraping/scraping.js";
+import express from "express";
+import passport_router from "./routes/passports.route.js";
+import bodyParser from "body-parser";
+import { globalError } from "./middlewares/global_errors.js";
+import cors from "cors";
 
-// ? Connect mongodb
-connect_mongodb();
+config();
 
 start_scraping();
 

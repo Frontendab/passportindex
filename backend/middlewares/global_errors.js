@@ -9,4 +9,6 @@ const globalError = (err, req, res, next) => {
     });
 };
 
-module.exports = globalError;
+export {
+    globalError
+};

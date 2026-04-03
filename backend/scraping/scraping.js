@@ -1,35 +1,27 @@
-const puppeteer = require('puppeteer-extra');
-const StealthPlugin = require("puppeteer-extra-plugin-stealth")
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
-const Passport = require("../models/passports.model");
-const asyncHandler = require("express-async-handler");
+import asyncHandler from "express-async-handler";
+import { prisma } from '../config/db.js';
 
 
 puppeteer.use(StealthPlugin());
 
 
 const is_find_passport = asyncHandler(async(name_passport) => {
-    const isFind = await Passport.findOne({name_passport});
+    const isFind = await prisma.passport.findFirst({
+        where: {
+            name_passport
+        }
+    });
     if (isFind) return true
     return false
 });
 
-const save_content = asyncHandler(async(passport) => {
-    const is_find = await is_find_passport(passport.name_passport);
-
-    if (is_find)
-        return ;
-
-    const new_passport = await Passport(passport);
-    await new_passport.save();
-});
-
-
 async function start_scraping () {
-    const count_passports = await Passport.countDocuments({});
+    const count_passports = await prisma.passport.count();
     
     let obj = {}
-    let passports_info = []
 
     const browser = await puppeteer.launch({
         headless: true,
@@ -87,38 +79,44 @@ async function start_scraping () {
             obj["name_passport"] = name.trim();
             obj["cover"] = cover_src;
 
-            const visa_requirements = await page.evaluate(() => {
-                const list = [];
-                const tbody = document.querySelector("tbody");
-
-                const tr = tbody.querySelectorAll(".show-tr");
-                tr.forEach(async (el, _) => {
-                    const icon = el.querySelector("span").getAttribute("class");
-                    const name = el.querySelector("a").innerText;
-                    const visa_type = el.querySelector(".vrules").innerText;
-                    const div_color = el.querySelector("td.text-center").classList[0];
-
-                    const computedStyle = getComputedStyle(
-                        el.querySelector(`.${div_color}`)
-                    );
-                    const color = computedStyle.backgroundColor;
-
-                    list.push({
-                        icon, name, visa_type, color
-                    });
+            const is_find = await is_find_passport(obj["name_passport"]);
+            if (!is_find) {
+                const new_passport = await prisma.passport.create({
+                    data: obj,
                 });
 
-                return list
-            });
+                const visa_requirements = await page.evaluate((passportId) => {
+                    const list = [];
+                    const tbody = document.querySelector("tbody");
 
-            obj["visa_requirements"] = visa_requirements
+                    const tr = tbody.querySelectorAll(".show-tr");
+                    tr.forEach((el, _) => {
+                        const icon = el.querySelector("span").getAttribute("class");
+                        const name = el.querySelector("a").innerText;
+                        const visa_type = el.querySelector(".vrules").innerText;
+                        const div_color = el.querySelector("td.text-center").classList[0];
 
-            passports_info.push(obj)
+                        const computedStyle = getComputedStyle(
+                            el.querySelector(`.${div_color}`)
+                        );
+                        const color = computedStyle.backgroundColor;
 
+                        list.push({
+                            passportId,
+                            icon, name, visa_type, color
+                        });
+                    });
+
+                    return list
+                }, new_passport.id);
+
+                await prisma.visaRequirement.createMany({
+                    data: visa_requirements
+                });
+            }
         } catch (error) {
-            console.log("Catch: Render again...");
+            console.log("Catch: Render again...", error);
         } finally {
-            save_content(obj);
             obj = {}
         }
     }
@@ -128,6 +126,6 @@ async function start_scraping () {
     await browser.close();
 }
 
-module.exports = {
+export {
     start_scraping
-}
+};
