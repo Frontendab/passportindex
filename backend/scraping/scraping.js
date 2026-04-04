@@ -9,7 +9,7 @@ puppeteer.use(StealthPlugin());
 
 
 const is_find_passport = asyncHandler(async(name_passport) => {
-    const isFind = await prisma.passport.findFirst({
+    const isFind = await prisma.passport.findUnique({
         where: {
             name_passport
         }

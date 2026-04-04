@@ -19,7 +19,7 @@ const get_nationalities = asyncHandler(async(req, res) => {
 const get_passport_by_id = asyncHandler(async(req, res) => {
     const { id } = req.params;
 
-    const passport = await prisma.passport.findFirst({
+    const passport = await prisma.passport.findUnique({
         where: {
             id
         },
@@ -37,7 +37,7 @@ const get_passport_by_id = asyncHandler(async(req, res) => {
     const visa_requirements = await Promise.all(
         passport.visa_requirements.map(async (item) => {
             const iso2 = item.icon.split("flag-icon-")[1].toUpperCase();
-            const passport_by_name = await prisma.passport.findFirst({
+            const passport_by_name = await prisma.passport.findUnique({
                 where: {
                     name_passport: item.name.toUpperCase()
                 }
@@ -64,7 +64,7 @@ const get_passport_by_id = asyncHandler(async(req, res) => {
 const get_map_data = asyncHandler(async(req, res) => {
     const { id } = req.params;
 
-    const passport = await prisma.passport.findFirst({
+    const passport = await prisma.passport.findUnique({
         where: {
             id
         },
