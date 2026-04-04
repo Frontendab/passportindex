@@ -1,3 +1,4 @@
+// scraping/scraping.js
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
@@ -14,16 +15,15 @@ const is_find_passport = asyncHandler(async(name_passport) => {
             name_passport
         }
     });
-    if (isFind) return true
-    return false
+    if (isFind) return isFind
+    return {}
 });
 
-async function start_scraping () {
-    const count_passports = await prisma.passport.count();
-    
+async function start_scraping () {    
     let obj = {}
 
     const browser = await puppeteer.launch({
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
         headless: true,
         args: [
             '--no-sandbox',
@@ -43,14 +43,12 @@ async function start_scraping () {
     `
     });
 
-    await page.goto("https://www.passportindex.org", { waitUntil: "networkidle0" });
+    await page.goto(process.env.SCRAPING_URL, { waitUntil: "networkidle0" });
 
     const total = await page.$$eval("div.passimg", els => els.length);
-    if (count_passports >= total) return;
-    const diff = total - count_passports;
-    const start = total - diff;
-    for (let i = start; i < total; i++) {
-        await page.goto("https://www.passportindex.org", { waitUntil: "networkidle0" });
+
+    for (let i = 0; i < total; i++) {
+        await page.goto(process.env.SCRAPING_URL, { waitUntil: "networkidle0" });
 
         const divElements = await page.$$("div.passimg");
         await page.evaluate(el => {
@@ -80,42 +78,62 @@ async function start_scraping () {
             obj["cover"] = cover_src;
 
             const is_find = await is_find_passport(obj["name_passport"]);
-            if (!is_find) {
+            let passportId;
+            if (is_find) {
+                const update = await prisma.passport.update({
+                    where: {
+                        id: is_find.id,
+                    },
+                    data: {
+                        cover: obj["cover"],
+                    },
+                });
+
+                passportId = update.id;
+
+                await prisma.visaRequirement.deleteMany({
+                    where: {
+                        passportId
+                    }
+                });
+
+            } else {
                 const new_passport = await prisma.passport.create({
                     data: obj,
                 });
-
-                const visa_requirements = await page.evaluate((passportId) => {
-                    const list = [];
-                    const tbody = document.querySelector("tbody");
-
-                    const tr = tbody.querySelectorAll(".show-tr");
-                    tr.forEach((el, _) => {
-                        const icon = el.querySelector("span").getAttribute("class");
-                        const name = el.querySelector("a").innerText;
-                        const visa_type = el.querySelector(".vrules").innerText;
-                        const div_color = el.querySelector("td.text-center").classList[0];
-
-                        const computedStyle = getComputedStyle(
-                            el.querySelector(`.${div_color}`)
-                        );
-                        const color = computedStyle.backgroundColor;
-
-                        list.push({
-                            passportId,
-                            icon, name, visa_type, color
-                        });
-                    });
-
-                    return list
-                }, new_passport.id);
-
-                await prisma.visaRequirement.createMany({
-                    data: visa_requirements
-                });
+                passportId = new_passport.id;
             }
+            const visa_requirements = await page.evaluate((passportId) => {
+                const list = [];
+                const tbody = document.querySelector("tbody");
+
+                const tr = tbody.querySelectorAll(".show-tr");
+                tr.forEach((el, _) => {
+                    const icon = el.querySelector("span").getAttribute("class");
+                    const name = el.querySelector("a").innerText;
+                    const visa_type = el.querySelector(".vrules").innerText;
+                    const div_color = el.querySelector("td.text-center").classList[0];
+
+                    const computedStyle = getComputedStyle(
+                        el.querySelector(`.${div_color}`)
+                    );
+                    const color = computedStyle.backgroundColor;
+
+                    list.push({
+                        passportId,
+                        icon, name, visa_type, color
+                    });
+                });
+
+                return list
+            }, passportId);
+
+            await prisma.visaRequirement.createMany({
+                data: visa_requirements
+            });
         } catch (error) {
-            console.log("Catch: Render again...", error);
+            console.log("CRASH", error);
+            await browser.close();
         } finally {
             obj = {}
         }
@@ -125,6 +143,9 @@ async function start_scraping () {
 
     await browser.close();
 }
+
+if (process.env.SCRAPE_MODE)
+    start_scraping();
 
 export {
     start_scraping

@@ -16,7 +16,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "scrape:update": "SCRAPE_MODE=true node scraping/scraping.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.6.0",
