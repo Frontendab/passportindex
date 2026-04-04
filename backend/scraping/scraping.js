@@ -10,13 +10,11 @@ puppeteer.use(StealthPlugin());
 
 
 const is_find_passport = asyncHandler(async(name_passport) => {
-    const isFind = await prisma.passport.findUnique({
+    return await prisma.passport.findUnique({
         where: {
             name_passport
         }
     });
-    if (isFind) return isFind
-    return {}
 });
 
 async function start_scraping () {    
@@ -48,6 +46,8 @@ async function start_scraping () {
     const total = await page.$$eval("div.passimg", els => els.length);
 
     for (let i = 0; i < total; i++) {
+        console.log(`PROCESSING ${i}/${total}`);
+
         await page.goto(process.env.SCRAPING_URL, { waitUntil: "networkidle0" });
 
         const divElements = await page.$$("div.passimg");
@@ -79,7 +79,7 @@ async function start_scraping () {
 
             const is_find = await is_find_passport(obj["name_passport"]);
             let passportId;
-            if (is_find) {
+            if (is_find && is_find.id) {
                 const update = await prisma.passport.update({
                     where: {
                         id: is_find.id,
@@ -128,11 +128,12 @@ async function start_scraping () {
                 return list
             }, passportId);
 
-            await prisma.visaRequirement.createMany({
-                data: visa_requirements
-            });
+            if (visa_requirements.length > 0) {
+                await prisma.visaRequirement.createMany({
+                    data: visa_requirements
+                });
+            }
         } catch (error) {
-            console.log("CRASH", error);
             await browser.close();
         } finally {
             obj = {}

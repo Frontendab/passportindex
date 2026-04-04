@@ -17,6 +17,7 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
+    "db:deploy": "npx prisma migrate deploy && npx prisma generate",
     "scrape:update": "SCRAPE_MODE=true node scraping/scraping.js"
   },
   "dependencies": {

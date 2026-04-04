@@ -28,6 +28,7 @@ const get_passport_by_id = asyncHandler(async(req, res) => {
         }
     });
 
+    
     if (!passport)
         return res.status(404).json({
             status: "error",

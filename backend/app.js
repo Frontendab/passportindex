@@ -1,5 +1,6 @@
 // ? Config env
 import { config } from 'dotenv';
+config();
 
 import { start_scraping } from "./scraping/scraping.js";
 import express from "express";
@@ -7,10 +8,10 @@ import passport_router from "./routes/passports.route.js";
 import bodyParser from "body-parser";
 import { globalError } from "./middlewares/global_errors.js";
 import cors from "cors";
+import { waitForDB } from './config/db.js';
 
-config();
-
-start_scraping();
+await waitForDB();
+await start_scraping();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -33,6 +34,6 @@ app.all(/.*/, (req, res) => {
 
 app.use(globalError);
 
-app.listen(port, () => {
+app.listen(port, process.env.IP_SUPPORT, () => {
   console.log(`Server is listening on port ${port}`);
 });
