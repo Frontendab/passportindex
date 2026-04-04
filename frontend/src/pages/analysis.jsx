@@ -4,6 +4,7 @@ import {API_URL} from "../global/variables";
 import axios from "axios";
 import Loader from "../components/loader";
 import { save_passport, saveIdCountry } from "../redux/reducer_data_map";
+import { useNavigate } from "react-router-dom";
 
 const Head = lazy(() => import("../components/head"));
 const SideBarPassport = lazy(() => import("../components/side_bar_passport"));
@@ -13,6 +14,7 @@ const CountiesTable = lazy(() => import("../components/table"));
 
 const Analysis = () => {
 
+    const navigate = useNavigate();
     const { passport, id } = useSelector((state) => state.data_map);
     const dispatch = useDispatch();
 
@@ -41,7 +43,11 @@ const Analysis = () => {
     };
 
     useEffect(() => {
-        fetchPassportInfo();
+        if (id)
+            fetchPassportInfo();
+        else{
+            navigate("/");
+        }
     }, [id]);
 
     return (
