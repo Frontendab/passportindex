@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: "api"
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      SECRET_KEY_RECAPTCHA: ${SECRET_KEY_RECAPTCHA}
+      GOOGLE_API_URL: ${GOOGLE_API_URL}
+      PUPPETEER_EXECUTABLE_PATH: ${PUPPETEER_EXECUTABLE_PATH}
+      SCRAPING_URL: ${SCRAPING_URL}
+      SCRAPE_MODE: ${SCRAPE_MODE}
+      IP_SUPPORT: ${IP_SUPPORT}
+    ports:
+      - "3000:5000"
+    networks:
+      - connection_network
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - connection_network
+
+networks:
+  connection_network:
+volumes:
+  pgdata:
