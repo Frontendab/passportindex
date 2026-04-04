@@ -22,7 +22,7 @@ app.use(cors({
   origin: "*"
 }));
 
-app.use("/", passport_router);
+app.use("/api", passport_router);
 
 app.all(/.*/, (req, res) => {
   res.status(400).json({
