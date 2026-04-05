@@ -707,10 +707,15 @@
           "properties": { "name": "Latvia" }
         },
         {
-          "type": "Polygon",
-          "arcs": [[-265, 474, 475]],
+          "type": "MultiPolygon",
           "id": "MAR",
-          "properties": { "name": "Morocco" }
+          "properties": { 
+            "name": "Morocco" 
+          },
+          "arcs": [
+            [[-475, -264, -511, 622]], 
+            [[-265, 474, 475]]
+          ]
         },
         {
           "type": "Polygon",
@@ -1010,12 +1015,6 @@
           "arcs": [[619, 620, -57, -220, 621]],
           "id": "RWA",
           "properties": { "name": "Rwanda" }
-        },
-        {
-          "type": "Polygon",
-          "arcs": [[-475, -264, -511, 622]],
-          "id": "MAR",
-          "properties": { "name": "Western Sahara" }
         },
         {
           "type": "Polygon",
