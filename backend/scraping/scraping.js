@@ -111,6 +111,8 @@ async function start_scraping () {
                     const name = el.querySelector("a").innerText;
                     const visa_type = el.querySelector(".vrules").innerText;
                     const div_color = el.querySelector("td.text-center").classList[0];
+                    const daysRaw = el.querySelector(".vdays")?.innerText || "0";
+                    const days = parseInt(daysRaw.replace(/\D/g, "")) || 0;
 
                     const computedStyle = getComputedStyle(
                         el.querySelector(`.${div_color}`)
@@ -119,7 +121,7 @@ async function start_scraping () {
 
                     list.push({
                         passportId,
-                        icon, name, visa_type, color
+                        icon, name, visa_type, days, color
                     });
                 });
 
@@ -132,7 +134,7 @@ async function start_scraping () {
                 });
             }
         } catch (error) {
-            await browser.close();
+            console.error("Error processing this country:", error.message);
         } finally {
             obj = {}
         }
