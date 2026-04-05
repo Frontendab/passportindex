@@ -87,7 +87,7 @@ export default function CountiesTable({data}) {
                     </TableCell>
 
                     <TableCell align="right">
-                        <span>{row.days ? row.days : 0}</span>
+                        <span>{row.days ? row.days : "Unknown"}</span>
                     </TableCell>
 
                     </TableRow>
