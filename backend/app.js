@@ -20,7 +20,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: process.env.ORIGINAL_WEBSITE
+  origin: process.env.ORIGINAL_WEBSITE,
+  methods: ["GET", "POST"],
+  credentials: true
 }));
 
 app.use("/api", passport_router);
