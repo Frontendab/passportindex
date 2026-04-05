@@ -16,6 +16,7 @@ services:
       SCRAPING_URL: ${SCRAPING_URL}
       SCRAPE_MODE: ${SCRAPE_MODE}
       IP_SUPPORT: ${IP_SUPPORT}
+      ORIGINAL_WEBSITE: ${ORIGINAL_WEBSITE}
     networks:
       - connection_network
     depends_on:
