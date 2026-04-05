@@ -8,6 +8,9 @@ RUN npm install --force
 
 COPY . .
 
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_CAPTCHA_SITE_KEY=$VITE_CAPTCHA_SITE_KEY
+
 RUN npm run build
 
 FROM nginx:alpine AS production
