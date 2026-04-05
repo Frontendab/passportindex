@@ -2,6 +2,7 @@
 import { config } from 'dotenv';
 config();
 
+import requestIp from "request-ip";
 import { start_scraping } from "./scraping/scraping.js";
 import express from "express";
 import passport_router from "./routes/passports.route.js";
@@ -15,6 +16,11 @@ await start_scraping();
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.set('trust proxy', 1);
+
+// Use the requestIp Middleware to extract the IP
+app.use(requestIp.mw());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
