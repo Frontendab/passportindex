@@ -1,5 +1,5 @@
-const API_URL = "https://passportindex.live/api/";
-const SITE_KEY = "6LeQTKEsAAAAAI8PHhE5R1yC4PE09g8GvmIGyPcc";
+const API_URL = import.meta.env.VITE_API_URL;
+const SITE_KEY = import.meta.env.VITE_CAPTCHA_SITE_KEY;
 
 export {
     API_URL,

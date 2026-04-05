@@ -46,8 +46,6 @@ async function start_scraping () {
     const total = await page.$$eval("div.passimg", els => els.length);
 
     for (let i = 0; i < total; i++) {
-        console.log(`PROCESSING ${i}/${total}`);
-
         await page.goto(process.env.SCRAPING_URL, { waitUntil: "networkidle0" });
 
         const divElements = await page.$$("div.passimg");
