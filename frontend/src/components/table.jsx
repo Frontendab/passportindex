@@ -53,38 +53,47 @@ export default function CountiesTable({data}) {
                 <TableCell>Country</TableCell>
                 <TableCell align="right">Visa type</TableCell>
                 <TableCell align="right">Color</TableCell>
+                <TableCell align="right">Days</TableCell>
             </TableRow>
             </TableHead>
             <TableBody>
-            {rows.map((row) => (
-                <TableRow
-                    key={row.name}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    className="hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                        dispatch(
-                            saveIdCountry(row.id)
-                        )
-                    }}
-                >
-                <TableCell component="th" scope="row" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "15px"
-                }}>
-                    <FlagIcon countryCode={row.icon}/>
-                    <span>{row.name}</span>
-                </TableCell>
-                <TableCell align="right">{row.visa_type}</TableCell>
-                <TableCell align="right" style={{
-                    display: "flex"
-                }}>
-                    <div className="w-[20px] h-[20px] rounded-full" style={{
-                        backgroundColor: row.color
-                    }}></div>
-                </TableCell>
-                </TableRow>
-            ))}
+            {rows.map((row) => {
+                console.log(row);
+                return (
+                    <TableRow
+                        key={row.name}
+                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        className="hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                            dispatch(
+                                saveIdCountry(row.id)
+                            )
+                        }}
+                    >
+                    <TableCell component="th" scope="row" style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "15px"
+                    }}>
+                        <FlagIcon countryCode={row.icon}/>
+                        <span>{row.name}</span>
+                    </TableCell>
+                    <TableCell align="right">{row.visa_type}</TableCell>
+                    <TableCell align="right" style={{
+                        display: "flex"
+                    }}>
+                        <div className="w-[20px] h-[20px] rounded-full" style={{
+                            backgroundColor: row.color
+                        }}></div>
+                    </TableCell>
+
+                    <TableCell align="right">
+                        <span>{row.days ? row.days : 0}</span>
+                    </TableCell>
+
+                    </TableRow>
+                )
+            })}
             </TableBody>
         </Table>
         <div className='px-3 py-5 w-full text-center'>
