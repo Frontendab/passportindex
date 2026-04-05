@@ -48,6 +48,7 @@ const get_passport_by_id = asyncHandler(async(req, res) => {
                 icon: iso2,
                 name: item.name,
                 visa_type: item.visa_type,
+                days: item.days,
                 color: item.color
             };
         })
