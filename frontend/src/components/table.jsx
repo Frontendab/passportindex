@@ -58,7 +58,6 @@ export default function CountiesTable({data}) {
             </TableHead>
             <TableBody>
             {rows.map((row) => {
-                console.log(row);
                 return (
                     <TableRow
                         key={row.name}
