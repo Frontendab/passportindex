@@ -74,7 +74,7 @@ services:
       - webroot:/var/www/html
     depends_on:
       - nginx
-    command: certonly --webroot --webroot-path=/var/www/html --email sadouriayoub9@gmail.com --agree-tos --no-eff-email --non-interactive --keep-until-expiring -d passportindex.live
+    command: sh -c "while :; do certbot renew; sleep 12h; done"
 
 networks:
   connection_network:
