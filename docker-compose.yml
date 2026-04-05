@@ -27,6 +27,8 @@ services:
       dockerfile: Dockerfile
     container_name: "client"
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       VITE_API_URL: ${VITE_API_URL}
       VITE_CAPTCHA_SITE_KEY: ${VITE_CAPTCHA_SITE_KEY}
@@ -57,7 +59,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - certbot-etc:/etc/letsencrypt
       - webroot:/var/www/html
-      - ./frontend/dist:/usr/share/nginx/html
+      - ./frontend/dist:/usr/share/nginx/html:ro
     networks:
       - connection_network
     depends_on:
