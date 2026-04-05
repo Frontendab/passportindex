@@ -65,8 +65,8 @@ const Home = () => {
 
     return (
         <div className="relative">
-            <div className="z-[-1] w-80 h-100 bg-green-400 rounded-md blur-xl opacity-10 absolute top-30 -left-5"></div> 
-            <div className="z-[-1] w-120 h-140 bg-green-400 rounded-full blur-xl opacity-10 absolute -bottom-35 -right-10"></div> 
+            <div className="z-[-1] w-80 h-100 bg-green-400 rounded-md blur-xl opacity-10 absolute top-30 -left-5 max-md:left-0"></div> 
+            <div className="z-[-1] w-120 h-140 bg-green-400 rounded-full blur-xl opacity-10 absolute -bottom-35 -right-10 max-md:right-0"></div> 
 
             <div className="content mt-12">
                 <div className="information text-center pt-10 max-md:pt-0 grid gap-5">
