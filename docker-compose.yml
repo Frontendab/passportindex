@@ -16,12 +16,24 @@ services:
       SCRAPING_URL: ${SCRAPING_URL}
       SCRAPE_MODE: ${SCRAPE_MODE}
       IP_SUPPORT: ${IP_SUPPORT}
-    ports:
-      - "3000:5000"
     networks:
       - connection_network
     depends_on:
       - postgres
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: "client"
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+      VITE_CAPTCHA_SITE_KEY: ${VITE_CAPTCHA_SITE_KEY}
+    networks:
+      - connection_network
+    depends_on:
+      - backend
 
   postgres:
     image: postgres:17-alpine
@@ -33,12 +45,42 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     networks:
       - connection_network
 
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - certbot-etc:/etc/letsencrypt
+      - webroot:/var/www/html
+      - ./frontend/dist:/usr/share/nginx/html
+    networks:
+      - connection_network
+    depends_on:
+      - backend
+      - frontend
+      - postgres
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - webroot:/var/www/html
+    depends_on:
+      - nginx
+    command: certonly --webroot --webroot-path=/var/www/html --email sadouriayoub9@gmail.com --agree-tos --no-eff-email --non-interactive --keep-until-expiring -d passportindex.live
+
 networks:
   connection_network:
+    driver: bridge
 volumes:
   pgdata:
+  certbot-etc:
+  certbot-var:
+  webroot:
