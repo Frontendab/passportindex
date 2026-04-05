@@ -24,6 +24,7 @@ model VisaRequirement{
   icon String
   name String
   visa_type String
+  days Int
   color String
   passport Passport @relation("PassportVisaRequirement", fields: [passportId], references: [id])
   passportId String
