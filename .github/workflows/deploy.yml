@@ -2,10 +2,6 @@ name: Deploy to VPS
 
 on:
   workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Deploy'
-        required: true
 
 jobs:
   deploy:
