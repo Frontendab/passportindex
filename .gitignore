@@ -4,10 +4,4 @@ package-lock.json
 storage
 .env
 
-/prisma/migrations
-
-/generated/prisma
-
-/generated/prisma
-
 /generated/prisma
